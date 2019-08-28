@@ -1,6 +1,7 @@
 package com.example.hello1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -21,7 +23,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
     private ArrayList<SingleItemModel> itemsList;
     private Context mContext;
-    FirebaseStorage storage;
 
     public SectionListDataAdapter(Context context, ArrayList<SingleItemModel> itemsList) {
         this.itemsList = itemsList;
@@ -36,51 +37,50 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
     }
 
     @Override
-    public void onBindViewHolder(SingleItemRowHolder holder, int i) {
+    public void onBindViewHolder(SingleItemRowHolder singleItemRowHolder, int n) {
 
-        SingleItemModel singleItem = itemsList.get(i);
+        SingleItemModel singleItemModel = (SingleItemModel)this.itemsList.get(n);
+        singleItemRowHolder.tvTitle.setText((CharSequence)singleItemModel.getName());
+        singleItemRowHolder.time.setText((CharSequence)singleItemModel.getTime());
+        ((RequestBuilder)((RequestBuilder)((RequestBuilder)Glide.with((Context)this.mContext).load(singleItemModel.getBackground_url()).diskCacheStrategy(DiskCacheStrategy.ALL)).centerCrop()).error(2131165356)).into(singleItemRowHolder.itemImage);
+        if (singleItemModel.isFree()) {
+            singleItemRowHolder.lock.setImageResource(R.drawable.logo);
+            return;
+        }
+        singleItemRowHolder.lock.setImageResource(R.drawable.logo);
 
-        holder.tvTitle.setText(singleItem.getName());
-
-        storage= FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
-        String url="https://firebasestorage.googleapis.com/v0/b/owl-notes-d55ad.appspot.com/o/atom.png?alt=media&token=181bfbb1-abd8-4846-aa26-c957f42b5b9f";
-        Glide.with(mContext).load(url).override(64,64).into(holder.itemImage);
     }
 
     @Override
     public int getItemCount() {
-        return (null != itemsList ? itemsList.size() : 0);
+        ArrayList<SingleItemModel> arrayList = this.itemsList;
+        if (arrayList != null) {
+            return arrayList.size();
+        }
+        return 0;
     }
 
-    public class SingleItemRowHolder extends RecyclerView.ViewHolder {
-
-        protected TextView tvTitle;
-
+    public class SingleItemRowHolder
+            extends RecyclerView.ViewHolder {
         protected ImageView itemImage;
-
+        protected ImageView lock;
+        protected TextView time;
+        protected TextView tvTitle;
 
         public SingleItemRowHolder(View view) {
             super(view);
+            this.tvTitle = (TextView)view.findViewById(R.id.tvTitle);
+            this.itemImage = (ImageView)view.findViewById(R.id.itemImage);
+            //this.lock = (ImageView)view.findViewById(2131230954);
+            //this.time = (TextView)view.findViewById(2131230970);
+            view.setOnClickListener(new View.OnClickListener(){
 
-            this.tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            this.itemImage = (ImageView) view.findViewById(R.id.itemImage);
-
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
-
+                public void onClick(View view) {
+                    Toast.makeText((Context)view.getContext(), (CharSequence)SingleItemRowHolder.this.tvTitle.getText(), (int)0).show();
+                    //SectionListDataAdapter.this.mContext.startActivity(new Intent(SectionListDataAdapter.this.mContext, Video.class).setData(Uri.parse((String)((SingleItemModel)SectionListDataAdapter.this.itemsList.get(SingleItemRowHolder.this.getAdapterPosition())).getUrl())));
                 }
             });
-
-
         }
 
     }
-
 }
