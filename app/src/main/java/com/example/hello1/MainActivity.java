@@ -30,14 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
 
             //createDummyData();
-
-
-            //final RecyclerView my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
 
             my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -46,11 +40,6 @@ public class MainActivity extends AppCompatActivity {
             my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
             allSampleData = new ArrayList<SectionDataModel>();
-
-            //final  RecyclerViewDataAdapter adapter= {new RecyclerViewDataAdapter(this, allSampleData)};
-
-
-            //my_recycler_view.setAdapter(adapter);
 
 
         reference= FirebaseDatabase.getInstance().getReference().child("physics");
@@ -61,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 {
                     SectionDataModel sectionDataModel=dataSnapshot1.getValue(SectionDataModel.class);
                     allSampleData.add(sectionDataModel);
+                    String name=dataSnapshot1.getKey();
+                    if(dataSnapshot1.getKey()!=null){
+                        sectionDataModel.setHeaderTitle(dataSnapshot1.getKey());
+                    }
                 }
                 adapter=new RecyclerViewDataAdapter(MainActivity.this,allSampleData);
                 my_recycler_view.setAdapter(adapter);
