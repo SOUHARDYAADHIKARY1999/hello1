@@ -1,60 +1,43 @@
 package com.example.hello1;
 
 public class SingleItemModel {
-    private String background_url;
-    private boolean free;
     private String name;
-    private String time;
     private String url;
+    private String description;
+
 
     public SingleItemModel() {
+
     }
 
-    public SingleItemModel(String string2, String string3, String string4, String string5, boolean bl) {
-        this.name = string2;
-        this.url = string3;
-        this.background_url = string4;
-        this.time = string5;
-        this.free = bl;
+    public SingleItemModel(String name, String url) {
+        this.name = name;
+        this.url = url;
     }
 
-    public String getBackground_url() {
-        return this.background_url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public String getTime() {
-        return this.time;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUrl() {
-        return this.url;
+    public String getDescription() {
+        return description;
     }
 
-    public boolean isFree() {
-        return this.free;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setBackground_url(String string2) {
-        this.background_url = string2;
-    }
-
-    public void setFree(boolean bl) {
-        this.free = bl;
-    }
-
-    public void setName(String string2) {
-        this.name = string2;
-    }
-
-    public void setTime(String string2) {
-        this.time = string2;
-    }
-
-    public void setUrl(String string2) {
-        this.url = string2;
-    }
 }

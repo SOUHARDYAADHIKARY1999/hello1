@@ -18,11 +18,8 @@ public class SectionDataModel {
 
     }
 
-
-
-    public String getHeaderTitle()
-    {
-        return this.headerTitle;
+    public String getHeaderTitle() {
+        return headerTitle;
     }
 
     public void setHeaderTitle(String headerTitle) {
