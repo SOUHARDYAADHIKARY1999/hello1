@@ -31,11 +31,11 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
     }
 
     @Override
-    public void onBindViewHolder(ItemRowHolder itemRowHolder, int i) {
+    public void onBindViewHolder(ItemRowHolder itemRowHolder, int position) {
 
-        final String sectionName = dataList.get(i).getHeaderTitle();
+        final String sectionName = dataList.get(position).getHeaderTitle();
 
-        ArrayList singleSectionItems = dataList.get(i).getAllItemsInSection();
+        ArrayList singleSectionItems = dataList.get(position).getAllItemsInSection();
 
         itemRowHolder.itemTitle.setText(sectionName);
 

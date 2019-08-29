@@ -1,20 +1,30 @@
 package com.example.hello1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 import android.widget.Toolbar;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-
+    DatabaseReference reference;
 
     ArrayList<SectionDataModel> allSampleData;
+    RecyclerViewDataAdapter adapter;
+    RecyclerView my_recycler_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,26 +32,46 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        allSampleData = new ArrayList<SectionDataModel>();
-
-        /*if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setTitle("G PlayStore");
-        }*/
-
-            createDummyData();
 
 
-            RecyclerView my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
+            //createDummyData();
+
+
+            //final RecyclerView my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+            my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
 
             my_recycler_view.setHasFixedSize(true);
 
-            RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(this, allSampleData);
-
             my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-            my_recycler_view.setAdapter(adapter);
+            allSampleData = new ArrayList<SectionDataModel>();
 
+            //final  RecyclerViewDataAdapter adapter= {new RecyclerViewDataAdapter(this, allSampleData)};
+
+
+            //my_recycler_view.setAdapter(adapter);
+
+
+        reference= FirebaseDatabase.getInstance().getReference().child("physics");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                {
+                    SectionDataModel sectionDataModel=dataSnapshot1.getValue(SectionDataModel.class);
+                    allSampleData.add(sectionDataModel);
+                }
+                adapter=new RecyclerViewDataAdapter(MainActivity.this,allSampleData);
+                my_recycler_view.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Opps.... Something bad happened", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
