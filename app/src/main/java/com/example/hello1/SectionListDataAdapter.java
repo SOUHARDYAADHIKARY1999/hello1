@@ -44,8 +44,6 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-        /*String url="https://firebasestorage.googleapis.com/v0/b/owl-notes-d55ad.appspot.com/o/atom.png?alt=media&token=181bfbb1-abd8-4846-aa26-c957f42b5b9f";
-        Glide.with(mContext).load(url).override(64,64).into(holder.itemImage);*/
     }
 
     @Override
