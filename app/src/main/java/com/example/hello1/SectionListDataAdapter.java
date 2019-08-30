@@ -40,10 +40,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
         SingleItemModel singleItem = itemsList.get(i);
 
         holder.tvTitle.setText(singleItem.getName());
-
-        storage= FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
+        Glide.with(mContext).load(singleItem.getUrl()).override(400,400).placeholder(R.drawable.logo).into(holder.itemImage);
     }
 
     @Override

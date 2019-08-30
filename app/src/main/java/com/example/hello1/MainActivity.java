@@ -1,6 +1,7 @@
 package com.example.hello1;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +21,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     DatabaseReference reference;
 
     ArrayList<SectionDataModel> allSampleData;
@@ -33,36 +34,43 @@ public class MainActivity extends AppCompatActivity {
 
             //createDummyData();
 
-            my_recycler_view = (RecyclerView) findViewById(R.id.my_recycler_view);
+            my_recycler_view = findViewById(R.id.my_recycler_view);
 
             my_recycler_view.setHasFixedSize(true);
 
             my_recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-            allSampleData = new ArrayList<SectionDataModel>();
-
+            allSampleData = new ArrayList<>();
+            adapter=new RecyclerViewDataAdapter(this,allSampleData);
+            my_recycler_view.setAdapter(adapter);
 
         reference= FirebaseDatabase.getInstance().getReference().child("physics");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                {
-                    SectionDataModel sectionDataModel=dataSnapshot1.getValue(SectionDataModel.class);
-                    allSampleData.add(sectionDataModel);
-                    String name=dataSnapshot1.getKey();
-                    if(dataSnapshot1.getKey()!=null){
-                        sectionDataModel.setHeaderTitle(dataSnapshot1.getKey());
-                    }
-                }
-                adapter=new RecyclerViewDataAdapter(MainActivity.this,allSampleData);
-                my_recycler_view.setAdapter(adapter);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                allSampleData.add(dataSnapshot.getValue(SectionDataModel.class));
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "Opps.... Something bad happened", Toast.LENGTH_SHORT).show();
+
             }
         });
 
